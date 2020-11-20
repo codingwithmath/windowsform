@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using productDB.src.User.User;
-
+using productDB.src.Models.User;
 
 namespace productDB
 {
@@ -19,19 +11,35 @@ namespace productDB
             InitializeComponent();
         }
 
+        static bool isAuthenticationValid(User user, string login, string password)
+        {
+            if (user.Login == login && user.Password == password)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             User user = new User();
 
-            user.login = txtUser.Text;
-            user.password = txtPassword.Text;
+            user.Login = txtUser.Text;
+            user.Password = txtPassword.Text;
 
             User loggedUser = user.makeLogin(user);
 
+            bool isUserAuthenticated = isAuthenticationValid(user, loggedUser.Login, loggedUser.Password);
 
-            if (user.login == loggedUser.login && user.password == loggedUser.password)
+            if (isUserAuthenticated == true)
             {
                 MessageBox.Show("Valid Authentication");
+
+                Product product = new Product();
+                product.Show();
             }
             else
             {

@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Npgsql;
 
-namespace productDB.src.Utils
+namespace productDB.src.Utils.Database
 {
     class Database
     {
-        private static string host = "172.17.4.218";
+        private static string host = "172.17.4.211";
         private static string port = "5432";
         private static string user = "postgres";
         private static string password = "postgres";
