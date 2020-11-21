@@ -109,6 +109,55 @@ namespace productDB.src.Models.Product
             }
         }
 
+        public int updateProduct (string title, string value)
+        {
+            string productExists = searchProduct(title);
 
+            if (productExists == null)
+            {
+                return 0;
+            }
+
+            NpgsqlConnection connection = null;
+            
+            try
+            {
+                connection = database.getConnection();
+
+                using (NpgsqlCommand command = connection.CreateCommand())
+                {
+                    string queryUpdateProduct = "UPDATE products SET " + value + "= @value, updated_at = @updateTime WHERE title = @title";
+
+                    command.Parameters.AddWithValue("@value", NpgsqlTypes.NpgsqlDbType.Char, value);
+                    command.Parameters.AddWithValue("@title", NpgsqlTypes.NpgsqlDbType.Char, title);
+                    command.Parameters.AddWithValue("@updateTime", NpgsqlTypes.NpgsqlDbType.Date, DateTime.Now);
+
+                    command.CommandText = queryUpdateProduct;
+                    command.CommandType = System.Data.CommandType.Text;
+
+                    int result = command.ExecuteNonQuery();
+
+                    if (result == 0)
+                    {
+                        throw new Exception("Error while updating product");
+                    }
+                    else
+                    {
+                        return result;
+                    }
+                }
+            }
+            catch (Exception error)
+            {
+                throw new Exception(error.Message);
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    connection.Close();
+                }
+            }
+        }
     }
 }
