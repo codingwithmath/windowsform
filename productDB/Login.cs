@@ -38,7 +38,7 @@ namespace productDB
             {
                 MessageBox.Show("Valid Authentication");
 
-                Product product = new Product();
+                ViewProduct product = new ViewProduct();
                 product.Show();
             }
             else

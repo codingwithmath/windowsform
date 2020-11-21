@@ -10,11 +10,16 @@ using System.Windows.Forms;
 
 namespace productDB
 {
-    public partial class Product : Form
+    public partial class Update : Form
     {
-        public Product()
+        public Update()
         {
             InitializeComponent();
+        }
+
+        private void updateBtn_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
