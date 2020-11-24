@@ -9,7 +9,7 @@ namespace productDB.src.Utils.Database
 {
     class Database
     {
-        private static string host = "172.17.4.220";
+        private static string host = "172.20.84.84";
         private static string port = "5432";
         private static string user = "postgres";
         private static string password = "postgres";

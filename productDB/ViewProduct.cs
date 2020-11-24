@@ -19,7 +19,8 @@ namespace productDB
 
         private void deleteBtn_Click(object sender, EventArgs e)
         {
-
+            Delete delete = new Delete();
+            delete.Show();
         }
 
         private void createBtn_Click(object sender, EventArgs e)
@@ -32,6 +33,12 @@ namespace productDB
         {
             Update update = new Update();
             update.Show();
+        }
+
+        private void readBtn_Click(object sender, EventArgs e)
+        {
+            Read read = new Read();
+            read.Show();
         }
     }
 }

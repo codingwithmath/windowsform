@@ -6,11 +6,14 @@ namespace productDB.src.Models.Product
 {
     class Product
     {
+        public string id { get; set; }
+        public DateTime timestamps { get; set; }
+        public DateTime updatedAt { get; set; }
+
         public string Title;
         public string Category;
         public string Description;
         public string Url;
-        public DateTime timestamps { get; set; }
         public Product()
         {
 
@@ -71,7 +74,7 @@ namespace productDB.src.Models.Product
             }
         }
 
-        public string searchProduct(string title)
+        public Product searchProduct(string title)
         {
             NpgsqlConnection connection = null;
 
@@ -79,7 +82,7 @@ namespace productDB.src.Models.Product
             {
                 connection = database.getConnection();
 
-                string queryProduct = "SELECT title FROM products WHERE title = @title";
+                string queryProduct = "SELECT id, title, category, description, url, timestamps, updated_at FROM products WHERE title = @title";
                 
                 NpgsqlCommand command = new NpgsqlCommand(queryProduct, connection);
 
@@ -87,14 +90,24 @@ namespace productDB.src.Models.Product
 
                 NpgsqlDataReader dataReader = command.ExecuteReader();
 
-                string result = null;
+                Product product = new Product();
 
                 if (dataReader.Read())
                 {
-                    result = dataReader["title"].ToString();
+                    product.id = dataReader["id"].ToString();
+                    product.Title = dataReader["title"].ToString();
+                    product.Category = dataReader["category"].ToString();
+                    product.Description = dataReader["description"].ToString();
+                    product.Url = dataReader["url"].ToString();
+                    product.timestamps = Convert.ToDateTime(dataReader["timestamps"].ToString());
+
+                    if (dataReader["updated_at"].ToString() != "")
+                    {
+                        product.updatedAt = Convert.ToDateTime(dataReader["updated_at"].ToString());
+                    }
                 }
 
-                return result;
+                return product;
             }
             catch (Exception error)
             {
@@ -109,11 +122,11 @@ namespace productDB.src.Models.Product
             }
         }
 
-        public int updateProduct (string title, string value)
+        public int updateProduct (string title, string value, string column)
         {
-            string productExists = searchProduct(title);
+            Product productExists = searchProduct(title);
 
-            if (productExists == null)
+            if (productExists.Title != title)
             {
                 return 0;
             }
@@ -126,11 +139,60 @@ namespace productDB.src.Models.Product
 
                 using (NpgsqlCommand command = connection.CreateCommand())
                 {
-                    string queryUpdateProduct = "UPDATE products SET " + value + "= @value, updated_at = @updateTime WHERE title = @title";
+                    string queryUpdateProduct = "UPDATE products SET " + column + "= @value, updated_at = @updateTime WHERE title = @title";
 
                     command.Parameters.AddWithValue("@value", NpgsqlTypes.NpgsqlDbType.Char, value);
                     command.Parameters.AddWithValue("@title", NpgsqlTypes.NpgsqlDbType.Char, title);
                     command.Parameters.AddWithValue("@updateTime", NpgsqlTypes.NpgsqlDbType.Date, DateTime.Now);
+
+                    command.CommandText = queryUpdateProduct;
+                    command.CommandType = System.Data.CommandType.Text;
+
+                    int result = command.ExecuteNonQuery();
+
+                    if (result == 0)
+                    {
+                        throw new Exception("Error while updating product");
+                    }
+                    else
+                    {
+                        return result;
+                    }
+                }
+            }
+            catch (Exception error)
+            {
+                throw new Exception(error.Message);
+            }
+            finally
+            {
+                if (connection != null)
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        public int deleteProduct (string title)
+        {
+            Product productExists = searchProduct(title);
+
+            if (productExists.Title != title)
+            {
+                return 0;
+            }
+
+            NpgsqlConnection connection = null;
+
+            try
+            {
+                connection = database.getConnection();
+
+                using (NpgsqlCommand command = connection.CreateCommand())
+                {
+                    string queryUpdateProduct = "DELETE FROM products WHERE title = @title";
+
+                    command.Parameters.AddWithValue("@title", NpgsqlTypes.NpgsqlDbType.Char, title);
 
                     command.CommandText = queryUpdateProduct;
                     command.CommandType = System.Data.CommandType.Text;

@@ -119,7 +119,7 @@
             // 
             this.createBtn.Location = new System.Drawing.Point(270, 344);
             this.createBtn.Name = "createBtn";
-            this.createBtn.Size = new System.Drawing.Size(252, 23);
+            this.createBtn.Size = new System.Drawing.Size(242, 23);
             this.createBtn.TabIndex = 9;
             this.createBtn.Text = "Criar";
             this.createBtn.UseVisualStyleBackColor = true;

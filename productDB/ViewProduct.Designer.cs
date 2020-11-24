@@ -62,6 +62,7 @@
             this.readBtn.TabIndex = 2;
             this.readBtn.Text = "View product";
             this.readBtn.UseVisualStyleBackColor = true;
+            this.readBtn.Click += new System.EventHandler(this.readBtn_Click);
             // 
             // deleteBtn
             // 

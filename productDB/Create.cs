@@ -33,19 +33,25 @@ namespace productDB
             product.Url = txtUrl.Text.ToLower();
             product.timestamps = DateTime.Now;
 
-            string productsAlreadyExists = product.searchProduct(product.Title);
+            Product productsAlreadyExists = product.searchProduct(product.Title);
 
-            if (productsAlreadyExists != null)
+            if (productsAlreadyExists.Title == product.Title)
             {
                 MessageBox.Show("Produto já existe!");
 
-            } else
+            }
+            else
             {
                 int result = product.createProduct(product);
 
                 if (result != 0)
                 {
                     MessageBox.Show("Produto criado com sucesso!");
+
+                    txtTitle.Clear();
+                    txtCategory.Clear();
+                    txtDescription.Clear();
+                    txtUrl.Clear();
                 }
                 else
                 {
